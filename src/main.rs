@@ -2,33 +2,33 @@ use std::io;
 
 fn main() {
     // Create board array of numbers for printing board
-    let mut board_array: [String; 9] = [
-        String::from("0"), 
-        String::from("1"), 
-        String::from("2"), 
-        String::from("3"), 
-        String::from("4"), 
-        String::from("5"), 
-        String::from("6"), 
-        String::from("7"), 
-        String::from("8")
+    let mut board_array: [&'static str; 9] = [
+        "0",
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
     ];
 
     println!("Welcome to the tic tac toe!");
 
     let mut is_player_one = true;
-    let mut player_character = String::new();
+    let mut player_character;
     let mut turn_count = 1;
-    let mut player_number = String::new();
+    let mut player_number;
 
     loop {
         // Check which player is currently going and adjust their character accordingly
         if is_player_one {
             player_number = String::from("1");
-            player_character = String::from("X");
+            player_character = "X";
         } else {
             player_number = String::from("2");
-            player_character = String::from("O");
+            player_character = "O";
         }
 
         // Print player prompts and board
@@ -69,7 +69,7 @@ fn main() {
 
 }
 
-fn print_board(board_array: &[String]) {
+fn print_board(board_array: &[&str]) {
     // Board should print as:
     // |0|1|2|
     // |3|4|5|
@@ -81,7 +81,7 @@ fn print_board(board_array: &[String]) {
     board_array[0], board_array[1], board_array[2], board_array[3], board_array[4], board_array[5], board_array[6], board_array[7], board_array[8]);
 }
 
-fn check_for_win(board_array: &[String]) -> bool {
+fn check_for_win(board_array: &[&str]) -> bool {
     if board_array[0] == board_array[1] && board_array[1] == board_array[2] {
         return true;
     } else if board_array[3] == board_array[4] && board_array[4] == board_array[5] {
