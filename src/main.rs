@@ -22,35 +22,28 @@ fn main() {
     let mut player_number;
 
     loop {
-        // Check which player is currently going and adjust their character accordingly
-        if is_player_one {
-            player_number = String::from("1");
-            player_character = "X";
-        } else {
-            player_number = String::from("2");
-            player_character = "O";
+        let info = player_information(is_player_one);
+        player_number = info.0;
+        player_character = info.1;
+        
+        let mut player_entry: usize;
+
+        loop {
+            player_entry = match get_player_entry(&player_number, &board_array) {
+                Ok(index) => index,
+                Err(error) => {
+                    match error {
+                        EntryError::InvalidCharacter => println!("You did not enter a number. Please enter a number between 0 and 8."),
+                        EntryError::InvalidIndex => println!("You did not enter a number between 0 and 8. Please try again.")
+                    };
+                    continue;
+                }
+            };
+            break;
         }
 
-        // Print player prompts and board
-        println!("Player {}, please enter a number, 0 to 8, to pick a spot for your play", player_number);
-        print_board(&board_array);
-
-        let mut chosen_index = String::new();
-
-        // Prompt user for index input
-        io::stdin().read_line(&mut chosen_index)
-            .expect("Failed to read line");
-
-        // Convert user input to usize to access board array
-        let chosen_index: usize = match chosen_index.trim().parse() {
-            Ok(num) => num,
-            Err(_) => continue,
-        };
-
-        // Need to add error check for if the number is between 0 and 9
-
         // Replace number in array with player character, X or O
-        board_array[chosen_index] = player_character;
+        board_array[player_entry] = player_character;
         print_board(&board_array);
         let is_winner = check_for_win(&board_array);
         if is_winner {
@@ -67,6 +60,44 @@ fn main() {
     
     }
 
+}
+
+// Check which player is currently going and adjust their character accordingly
+// Returns tuple of (player_number, player_character)
+fn player_information(is_player_one: bool) -> (&'static str, &'static str) {
+    if is_player_one {
+        ("1", "X")
+    } else {
+        ("2", "O")
+    }
+}
+
+fn setup_game() {
+
+}
+
+enum EntryError {
+    InvalidIndex,
+    InvalidCharacter
+}
+
+fn get_player_entry(player_number: &str, board_array: &[&str]) -> Result<usize, EntryError> {
+    // Print player prompts and board
+    println!("Player {}, please enter a number, 0 to 8, to pick a spot for your play", player_number);
+    print_board(&board_array);
+
+    let mut chosen_index = String::new();
+
+    // Prompt user for index input
+    io::stdin().read_line(&mut chosen_index)
+        .expect("Failed to read line");
+
+    // Convert user input to usize to access board array
+    match chosen_index.trim().parse() {
+        Ok(num) if num <= 8 => Ok(num),
+        Ok(_) => Err(EntryError::InvalidIndex),
+        Err(_) => Err(EntryError::InvalidCharacter),
+    }
 }
 
 fn print_board(board_array: &[&str]) {
