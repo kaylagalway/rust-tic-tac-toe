@@ -6,4 +6,4 @@ To play:
 
 You should then see the game in your terminal window, with directions to play:
 
-![tictactoe](https://imgur.com/61wZf82)
+![tictactoe](https://i.imgur.com/61wZf82.png)
